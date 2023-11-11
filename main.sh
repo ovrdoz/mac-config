@@ -45,12 +45,11 @@ fi
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
 # Configure Zsh plugins
-sed -i '' 's/^plugins=(.*)/plugins=(git zsh-autosuggestions zsh-syntax-highlighting fast-syntax-highlighting zsh-autocomplete)/' "$MY_HOME_DIR/.zshrc"
+sed -i '' 's/^plugins=(.*)/plugins=(git zsh-autosuggestions zsh-syntax-highlighting zsh-autocomplete)/' "$MY_HOME_DIR/.zshrc"
 
 # Clone Zsh plugins into the proper directories
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM}/plugins/zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-syntax-highlighting ${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting
-git clone https://github.com/zdharma/fast-syntax-highlighting ${ZSH_CUSTOM}/plugins/fast-syntax-highlighting
 git clone https://github.com/marlonrichert/zsh-autocomplete ${ZSH_CUSTOM}/plugins/zsh-autocomplete
 
 # Add aliases to the .zshrc file
