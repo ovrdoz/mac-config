@@ -38,9 +38,7 @@ fi
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" || { echo "Oh My Zsh installation failed"; exit 1; }
 
 # Configure Zsh plugins
-sed -i '' '/^plugins=(/c\
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting fast-syntax-highlighting zsh-autocomplete)
-' "$MY_HOME_DIR/.zshrc"
+sed -i '' 's/^plugins=(.*)/plugins=(git zsh-autosuggestions zsh-syntax-highlighting fast-syntax-highlighting zsh-autocomplete)/' "$MY_HOME_DIR/.zshrc"
 
 # Clone Zsh plugins into the proper directories
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM}/plugins/zsh-autosuggestions
