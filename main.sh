@@ -3,6 +3,12 @@
 MY_HOME_DIR="/Users/maia"
 ZSH_CUSTOM="$MY_HOME_DIR/.oh-my-zsh/custom"
 
+# Check if the script is run as root
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root" 
+   exit 1
+fi
+
 # Install Homebrew
 yes | /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || { echo "Homebrew installation failed"; exit 1; }
 
