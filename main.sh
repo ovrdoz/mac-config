@@ -1,36 +1,47 @@
 #!/bin/bash
 
 MY_HOME_DIR="/Users/maia"
-# Instala o Homebrew
-yes | /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+ZSH_CUSTOM="$MY_HOME_DIR/.oh-my-zsh/custom"
 
-# Adiciona Homebrew ao zprofile
+# Install Homebrew
+yes | /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || { echo "Homebrew installation failed"; exit 1; }
+
+# Add Homebrew to zprofile
 echo -e "\n# Homebrew environment setup" >> $MY_HOME_DIR/.zprofile
 echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> $MY_HOME_DIR/.zprofile
 
-# Carrega as variáveis de ambiente do Homebrew para a sessão atual do shell
+# Load Homebrew environment variables for the current shell session
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# Instala o Visual Studio Code
-brew install --cask visual-studio-code
+# Install Visual Studio Code
+brew install --cask visual-studio-code || { echo "Visual Studio Code installation failed"; exit 1; }
 
-# Configura o comando 'code' para abrir o VS Code do terminal
-cat << EOF >> $MY_HOME_DIR/.zprofile
-# Add Visual Studio Code (code)
-export PATH="\$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
-EOF
+# Configure 'code' command to open VS Code from terminal
+echo 'export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"' >> $MY_HOME_DIR/.zprofile
 
-# Instala o Oh My Zsh
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+# Install Oh My Zsh
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" || { echo "Oh My Zsh installation failed"; exit 1; }
 
-# Configura plugins do Zsh (isso substituirá qualquer configuração existente de plugins no .zshrc)
-sed -i '' 's/^plugins=(git)/plugins=(git zsh-autosuggestions zsh-syntax-highlighting fast-syntax-highlighting zsh-autocomplete)/' $MY_HOME_DIR/.zshrc
+# Wait for Oh My Zsh installation to complete before proceeding
+while [ ! -f $MY_HOME_DIR/.zshrc ]; do
+  sleep 1
+done
 
-# Após instalar o Oh My Zsh, os plugins precisam ser clonados nos diretórios apropriados
-git clone https://github.com/zsh-users/zsh-autosuggestions \${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-git clone https://github.com/zsh-users/zsh-syntax-highlighting \${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-git clone https://github.com/zdharma/fast-syntax-highlighting \${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/fast-syntax-highlighting
-git clone https://github.com/marlonrichert/zsh-autocomplete \${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autocomplete
+# Configure Zsh plugins
+sed -i '' 's/plugins=(git)/plugins=(git zsh-autosuggestions zsh-syntax-highlighting fast-syntax-highlighting zsh-autocomplete)/' $MY_HOME_DIR/.zshrc
 
-# Recarrega o arquivo .zshrc para ativar os plugins
+# Clone Zsh plugins into the proper directories
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM}/plugins/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-syntax-highlighting ${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting
+git clone https://github.com/zdharma/fast-syntax-highlighting ${ZSH_CUSTOM}/plugins/fast-syntax-highlighting
+git clone https://github.com/marlonrichert/zsh-autocomplete ${ZSH_CUSTOM}/plugins/zsh-autocomplete
+
+# Add aliases to the .zshrc file
+echo "alias ll='ls -lah'" >> $MY_HOME_DIR/.zshrc
+echo "alias k='kubectl'" >> $MY_HOME_DIR/.zshrc
+
+# Install kubectl and wget
+brew install kubectl wget || { echo "kubectl or wget installation failed"; exit 1; }
+
+# Apply changes
 source $MY_HOME_DIR/.zshrc
