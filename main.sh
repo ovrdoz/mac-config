@@ -25,6 +25,9 @@ brew install --cask visual-studio-code || { echo "Visual Studio Code installatio
 # Configure 'code' command to open VS Code from terminal
 echo 'export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"' >> $MY_HOME_DIR/.zprofile
 
+# Unset ZSH variable to avoid Oh My Zsh installation issues
+unset ZSH
+
 # Install Oh My Zsh
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" || { echo "Oh My Zsh installation failed"; exit 1; }
 
