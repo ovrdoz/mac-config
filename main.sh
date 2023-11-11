@@ -30,6 +30,7 @@ echo 'export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources
 
 # Check if Oh My Zsh is already installed and back up the existing directory
 if [ -d "$OH_MY_ZSH_DIR" ]; then
+  rm -rf *-zsh.bak
   mv $OH_MY_ZSH_DIR "${OH_MY_ZSH_DIR}.bak"
 fi
 
