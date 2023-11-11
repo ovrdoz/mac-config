@@ -2,6 +2,7 @@
 
 MY_HOME_DIR="/Users/maia"
 ZSH_CUSTOM="$MY_HOME_DIR/.oh-my-zsh/custom"
+OH_MY_ZSH_DIR="$MY_HOME_DIR/.oh-my-zsh"
 
 # Ensure the script is not running as root
 if [[ $EUID -eq 0 ]]; then
@@ -19,22 +20,21 @@ echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> $MY_HOME_DIR/.zprofile
 # Load Homebrew environment variables for the current shell session
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# Install Visual Studio Code
-brew install --cask visual-studio-code || { echo "Visual Studio Code installation failed"; exit 1; }
+# Install Visual Studio Code if not already installed
+if ! command -v code >/dev/null; then
+  brew install --cask visual-studio-code || { echo "Visual Studio Code installation failed"; exit 1; }
+fi
 
 # Configure 'code' command to open VS Code from terminal
 echo 'export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"' >> $MY_HOME_DIR/.zprofile
 
-# Unset ZSH variable to avoid Oh My Zsh installation issues
-unset ZSH
+# Check if Oh My Zsh is already installed and back up the existing directory
+if [ -d "$OH_MY_ZSH_DIR" ]; then
+  mv $OH_MY_ZSH_DIR "${OH_MY_ZSH_DIR}.bak"
+fi
 
 # Install Oh My Zsh
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" || { echo "Oh My Zsh installation failed"; exit 1; }
-
-# Wait for Oh My Zsh installation to complete before proceeding
-while [ ! -f $MY_HOME_DIR/.zshrc ]; do
-  sleep 1
-done
 
 # Configure Zsh plugins
 sed -i '' 's/plugins=(git)/plugins=(git zsh-autosuggestions zsh-syntax-highlighting fast-syntax-highlighting zsh-autocomplete)/' $MY_HOME_DIR/.zshrc
